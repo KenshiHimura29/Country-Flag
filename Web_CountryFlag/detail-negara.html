@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detail Negara</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="navi">
+        <h1 class="title">Detail Negara</h1>
+            <div class="dropdown">
+                <button class="dropbtn">
+                    <p>Filter by region</p>
+                    <img src="caret-down-fill.svg" alt="">
+                </button>
+                <div class="dropdown-content">
+                    <a href="index.html">All Countries</a>
+                    <a href="asia.html">Asia</a>
+                    <a href="afrika.html">Africa</a>
+                    <a href="oceania.html">Oceania</a>
+                    <a href="amerika.html">Americas</a>
+                    <a href="eropa.html">Europe</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="country-detail"></div>
+
+    <script>
+        $(document).ready(function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const countryName = urlParams.get('country');
+
+            if (countryName) {
+                $.ajax({
+                    url: `https://restcountries.com/v3.1/name/${countryName}`,
+                    type: 'GET',
+                    success: function(response) {
+                        const data = response[0];
+                        $('#country-detail').html(`
+                            <div class="box">
+                                <img src="${data.flags.png}" alt="Flag of ${data.name.common}" />
+                                <h2>Country Name: ${data.name.common}</h2>
+                                <h4>Continent: ${data.continents}</h4>
+                                <h4>Official: ${data.name.official}</h4>
+                                <h4>Capital: ${data.capital}</h4>
+                                <h4>Population: ${data.population}</h4>
+                                <h4>Language: ${Object.values(data.languages).join(', ')}</h4>
+                                <h4>Currencies: ${Object.values(data.currencies).map(currency => currency.name).join(', ')}</h4>
+                            </div>
+                        `);
+                    },
+                    error: function() {
+                        $('#country-detail').html('<h2>Negara tidak ditemukan!</h2>');
+                    }
+                });
+            } else {
+                $('#country-detail').html('<h2>Nama negara tidak tersedia!</h2>');
+            }
+        });
+    </script>
+</body>
+</html>
